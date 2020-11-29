@@ -485,7 +485,116 @@ if #available(platform name version, ..., *) {
 }
 ```
 
+[вернуться к оглавлению](#Оглавление)
+
 ### Функции
+
+Функции - это отдельные фрагменты кода, которые выполняют определенную задачу. Вы даете функции имя, которое определяет, что она делает, и это имя используется для «вызова» функции для выполнения ее задачи, когда это необходимо.
+```swift
+func greet(person: String) -> String {
+    let greeting = "Hello, " + person + "!"
+    return greeting
+}
+func sayHelloWorld() -> String {
+    return "hello, world"
+}
+func greet(person: String) {
+    print("Hello, \(person)!")
+}
+```
+
+**Функции с несколькими возвращаемыми значениями**
+
+Вы можете использовать тип кортежа в качестве возвращаемого типа для функции, которая возвращает несколько значений как часть одного составного возвращаемого значения. В приведенном ниже примере определяется функция minMax (array :), которая находит самые маленькие и самые большие числа в массиве значений Int:
+```swift
+func minMax(array: [Int]) -> (min: Int, max: Int)? {
+    if array.isEmpty { return nil }
+    var currentMin = array[0]
+    var currentMax = array[0]
+    for value in array[1..<array.count] {
+        if value < currentMin {
+            currentMin = value
+        } else if value > currentMax {
+            currentMax = value
+        }
+    }
+    return (currentMin, currentMax)
+}
+```
+
+**Функции с неявным возвратом**
+
+Если все тело функции является одним выражением, функция неявно возвращает это выражение. Например, обе функции ниже имеют одинаковое поведение:
+```swift
+func greeting(for person: String) -> String {
+ "Hello, " + person + "!"
+}
+print(greeting(for: "Dave"))
+// Prints "Hello, Dave!"
+func anotherGreeting(for person: String) -> String {
+ return "Hello, " + person + "!"
+}
+print(anotherGreeting(for: "Dave"))
+// Prints "Hello, Dave!"
+```
+
+**Вариативные параметры**
+
+Параметр с переменным значением принимает ноль или более значений указанного типа. В приведенном ниже примере вычисляется среднее арифметическое для списка чисел любой длины:
+```swift
+func arithmeticMean(_ numbers: Double...) -> Double {
+ var total: Double = 0
+ for number in numbers {
+ total += number
+ }
+ return total / Double(numbers.count)
+}
+arithmeticMean(1, 2, 3, 4, 5)
+// returns 3.0, which is the arithmetic mean of these five numbers
+arithmeticMean(3, 8.25, 18.75)
+// returns 10.0, which is the arithmetic mean of these three numbers
+```
+> **Важно**   
+> Функция может иметь не более одного вариативного параметра.
+
+**Типы функций**
+
+Каждая функция имеет определенный тип функции, состоящий из типов параметров и типа возврата функции.   
+Например:
+```swift
+func addTwoInts(_ a: Int, _ b: Int) -> Int {
+ return a + b
+}
+func multiplyTwoInts(_ a: Int, _ b: Int) -> Int {
+ return a * b
+}
+```
+Этот пример определяет две простые математические функции, называемые addTwoInts и multiplyTwoInts. Каждая из этих функций принимает два значения Int и возвращает значение Int, которое является результатом выполнения соответствующей математической операции.
+Тип обеих этих функций `(Int, Int) -> Int`. Это можно прочитать как: «Функция, которая имеет два параметра, оба типа Int, и которая возвращает значение типа Int».
+
+**Вложенные функции**
+```swift
+func chooseStepFunction(backward: Bool) -> (Int) -> Int {
+ func stepForward(input: Int) -> Int { return input + 1 }
+ func stepBackward(input: Int) -> Int { return input - 1 }
+ return backward ? stepBackward : stepForward
+}
+var currentValue = -4
+let moveNearerToZero = chooseStepFunction(backward: currentValue > 0)
+// moveNearerToZero now refers to the nested stepForward() function
+while currentValue != 0 {
+ print("\(currentValue)... ")
+ currentValue = moveNearerToZero(currentValue)
+}
+print("zero!")
+// -4...
+// -3...
+// -2...
+// -1...
+```
+
+[вернуться к оглавлению](#Оглавление)
+
 ### Замыкания 
 ### Протоколы 
 ### Наследование
