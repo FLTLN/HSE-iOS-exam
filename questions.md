@@ -1570,15 +1570,68 @@ if tenEighty === alsoTenEighty {
 
 ## Жизненный цикл View Controller:
 
-Информация 
+Информация взята [отсюда](https://medium.com/good-morning-swift/ios-view-controller-life-cycle-2a0f02e74ff5).   
+
 Жизненный цикл `Viev Controller` можно описать этим графиком:
 
 ![](https://miro.medium.com/max/700/1*jb1Y17gwQCRi2XCKy7_QHQ.png)
 
 Для переходов между состояниями используются следующие методы:
 
-Layout, UIViewController methods
-UIKit & Storyboard (IBOutlets)
+**loadView**  
+
+Этот метод используется, когда `View Controller` создается из кода. Лучше ничего не делать с этим методом, если `View Controller` создан из `.xib` или `storyboard`.
+
+**viewDidLoad**
+
+Этот метод загружается один раз в жизненном цикле `View Controller`. Он вызывается, когда все `view` загружены. В этом методе можно выполнить некоторые общие задачи:   
+
+1. сетевой вызов, который нужен один раз.
+2. пользовательский интерфейс
+3. Другие задачи, которые нужно выполнить один раз  
+
+> Примечание:    
+> этот вызов метода перед определением границ и поворотом. Поэтому опасно работать с размером `view` в этом методе. 
+
+**viewWillAppear**  
+
+Этот метод вызывается каждый раз перед тем, как `view` станет видимым, и перед настройкой какой-либо анимации. В этом методе `view` имеет привязку, но ориентация еще не установлена. Вы можете переопределить этот метод для выполнения настраиваемых задач, связанных с отображением представления, например, для скрытия полей или отключения действия до того, как `view` станет видимым.
+
+**viewWillLayoutSubviews**   
+
+It don’t do Nothing by default. When a view’s bounds change, the view adjusts the position of its subviews. View controller can override this method to make changes before the view lays out its subviews.    
+
+Когда границы `view` изменяются, `view` корректирует положение своих `subview`. `View Controller` может переопределить этот метод, чтобы внести изменения до того, как `view` разместит `subview`.
+
+**viewDidLayoutSubviews**   
+
+Этот метод вызывается после того, как `View Controller` был настроен на свое `subview` после изменения его границы. Добавьте сюда код, если вы хотите внести изменения в `subview` после того, как они были установлены. 
+
+**viewDidAppear**   
+
+Этот метод вызывается после того, как `view` отобразится на экране. Используется для сохраненея данных, запуска анимации, воспроизведения видео и звука, загрузки данных из сети.
+
+**viewWillDisappear**   
+
+Этот метод вызывается до того, как `view` будет удалено из иерархии `view`. `view` все еще находятся в иерархии `view`, но еще не удалены, какие-либо анимации выгрузки еще не настроены. Добавьте сюда код для обработки таймеров, скрытия клавиатуры, отмены сетевых запросов, возврата любых изменений в родительский интерфейс. Также это идеальное место для сохранения состояния.  
+
+**viewDidDisappear**
+
+Этот метод вызывается после того, как `view` был удален из иерархии `view`. Используйте этот метод, чтобы прекратить прослушивание уведомлений или датчиков устройства.  
+
+**deinit**  
+
+Before a view controller is removed from memory, it gets deinitialized. You usually override deinit() to clean resources that the view controller has allocated that are not freed by ARC. Keep in mind that just because a VC is no longer visible, doesn’t mean that it has been deallocated. Container view controllers such as NavigationController can keep their VCs available in memory. Keep in mind that even though a VC is off screen, if it is still in memory, it still works normally and can receive notifications.   
+
+**didReceiveMemoryWarning**   
+
+When memory starts to fill up, iOS does not automatically move data from memory to its limited hard disk space. It does, however, issue this warning and YOU (I mean YOU) are responsible for clearing some objects out of memory. Be aware that if the memory of your app goes over a certain threshold, iOS will shutdown your app. Unfortunately, this will look like a crash to the end user.
+viewWillTransition(to:with:)
+When the interface orientation changes, UIKit calls this method on the window’s root view controller before the size changes are about to be made. The root view controller then notifies its child view controllers, propagating the message throughout the view controller hierarchy. The parameter to contains the new CGSize size of the container’s view and the parameter with contains a UIViewControllerTransitionCoordinator coordinator, an enum that describes the new orientation.
+
+> TODO:     
+> Layout, UIViewController methods
+> UIKit & Storyboard (IBOutlets)
 
 [вернуться к оглавлению](#Оглавление) 
 
